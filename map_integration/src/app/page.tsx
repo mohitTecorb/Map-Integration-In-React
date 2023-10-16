@@ -1,12 +1,12 @@
 'use client'
+import MapSection from "@/components/MapSection/page";
 import { Fragment, useState } from "react";
-import MapSection from "../../components/MapSection/page";
 export default function Home() {
- 
+
   const DemoData = {
     "features": [
       {
-        "type": "Feature",
+        "type": "red",
         "properties": {
           "PARK_ID": 960,
           "NAME": "TecOrb Technologies",
@@ -18,7 +18,7 @@ export default function Home() {
         }
       },
       {
-        "type": "Feature",
+        "type": "red",
         "properties": {
           "PARK_ID": 1219,
           "NAME": "Logix city center noida",
@@ -30,7 +30,7 @@ export default function Home() {
         }
       },
       {
-        "type": "Feature",
+        "type": "yellow",
         "properties": {
           "PARK_ID": 1220,
           "NAME": "Indore MP",
@@ -42,7 +42,7 @@ export default function Home() {
         }
       },
       {
-        "type": "Feature",
+        "type": "red",
         "properties": {
           "PARK_ID": 1221,
           "NAME": "RedFort Delhi India",
@@ -54,7 +54,7 @@ export default function Home() {
         }
       },
       {
-        "type": "Feature",
+        "type": "green",
         "properties": {
           "PARK_ID": 1223,
           "NAME": "Greater Noida",
@@ -66,7 +66,7 @@ export default function Home() {
         }
       },
       {
-        "type": "Feature",
+        "type": "yellow",
         "properties": {
           "PARK_ID": 1224,
           "NAME": "Faridabad up",
@@ -78,7 +78,7 @@ export default function Home() {
         }
       },
       {
-        "type": "Feature",
+        "type": "green",
         "properties": {
           "PARK_ID": 1225,
           "NAME": "Gurugram India",
@@ -92,22 +92,43 @@ export default function Home() {
     ]
   }
   const [selectedBusiness, setSelectedBusiness] = useState(DemoData?.features[0])
+  const [filterData, setFilterData] = useState("")
+  const [businessData, setBusinessData] = useState(DemoData)
+  const handleFilter = (data: any) => {
+    setFilterData(data)
+    if(data){
+       const searchTerm = data.toLowerCase().trim();
+    let filteredItems: any = businessData?.features.filter((item) => {
+      let formateData = item?.properties?.NAME.toLowerCase().trim()
+      return formateData.includes(searchTerm)
+    }
+    )
+    let newArr = {
+      "features":filteredItems
+    }
+    setBusinessData(newArr)
+    }else{
+      setBusinessData(DemoData)
+    }
+  }
+
   return (
     <div>
       <div className='text-center text-2xl mt-10'>
         Map Integration In Next.Js
       </div>
-      <div className="flex justify-between mx-10 border border-slate-400  h-[600px]">
+      <div className="flex justify-around  border border-slate-400  h-[600px]">
         <div className="ml-20">
           <h1 className="text-2xl font-bold">Business List</h1>
+          <input type="text" className="px-10 py-2 border border-slate-300 mt-5" placeholder="Search" value={filterData} onChange={(e) => { handleFilter(e.target.value) }} />
           <div>
             <ol className="border border-slate-400 mt-10">
-              {DemoData?.features?.map((item: any, index: any) => {
+              {businessData?.features?.map((item: any, index: any) => {
                 return (
                   <Fragment key={index} >
-                    <li 
-                    className={`border border-slate-200 p-4 cursor-pointer ${item?.properties?.PARK_ID == selectedBusiness?.properties.PARK_ID ? "bg-slate-200" : "" }`}
-                    onClick={()=>{setSelectedBusiness(item)}}
+                    <li
+                      className={`border border-slate-200 p-4 cursor-pointer ${item?.properties?.PARK_ID == selectedBusiness?.properties.PARK_ID ? "bg-slate-200" : ""}`}
+                      onClick={() => { setSelectedBusiness(item) }}
                     >{item.properties.NAME}</li>
                   </Fragment>
                 )
@@ -116,7 +137,7 @@ export default function Home() {
           </div>
         </div>
         <div className="">
-          <MapSection DemoData={DemoData} selectedBusiness={selectedBusiness} />
+          <MapSection businessData={businessData} selectedBusiness={selectedBusiness} />
         </div>
       </div>
     </div>

@@ -15,9 +15,10 @@ const MapSection = ({ businessData, selectedBusiness }: any) => {
                 return { ...it }
             }
         })
-        setFilterData(newArr)
+        let formetData = { "features": newArr }
+        setFilterData(formetData)
         if (newArr?.length > 0) {
-            setFilterSelectData(newArr[0])
+            setFilterSelectData(formetData?.features[0])
         }
         // setFilterSelectData(newArr?.features[0])
     }, [activeMap])
@@ -78,6 +79,7 @@ const MapSection = ({ businessData, selectedBusiness }: any) => {
             return VenueLocationIcon
         }
     }
+
     return (
         <div className=''>
             <div className='my-5'>
@@ -105,8 +107,8 @@ const MapSection = ({ businessData, selectedBusiness }: any) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {businessData?.features?.map((item: any, index: any) => {
-                    // console.log("filterData", item);
+                {filterData?.features?.map((item: any, index: any) => {
+                    console.log("filterData", item);
 
                     return (
                         <Marker
